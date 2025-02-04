@@ -103,7 +103,19 @@ class Lexer
 		elsif @c == ")"  # Handle Right Parenthesis
 			nextCh()
 			return Token.new(Token::RPAREN, ")")
-	
+
+		elsif @c == "<"  # Handle Less Than Operator
+			nextCh()
+			return Token.new(Token::LT_OP, "<")
+	  
+		  elsif @c == ">"  # Handle Greater Than Operator
+			nextCh()
+			return Token.new(Token::GT_OP, ">")
+	  
+		  elsif @c == "&"  # Handle And Operator
+			nextCh()
+			return Token.new(Token::AND_OP, "&")
+
 		else  # Handle Unknown Token
 			tok = Token.new(Token::UNKWN, @c)
 			nextCh()

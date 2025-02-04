@@ -33,6 +33,14 @@ class Token
 	# Keywords
 	PRINT = "print"         # Print statement keyword
 
+	# Logical Operators (BONUS)
+	LT_OP = "ltOp"       # Less than operator
+	GT_OP = "gtOp"       # Greater than operator
+	AND_OP = "andOp"     # And operator
+	IF = "if"            # If statement keyword
+	THEN = "then"        # Then keyword
+	WHILE = "while"      # While loop keyword
+
 #constructor
 	def initialize(type,text)
 		@type = type
