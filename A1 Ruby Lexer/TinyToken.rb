@@ -10,15 +10,28 @@ class Token
 
 # This is the only part of this class that you need to 
 # modify.
-	EOF = "eof"
-	LPAREN = "("
-	RPAREN = ")"
-	ADDOP  = "+"
-	WS = "whitespace"
-    UNKWN = "unknown"
+	# Globals
+	EOF = "eof"             # End of file
+	WS = "whitespace"       # Whitespace 
+	UNKWN = "unknown"       # Unknown token
 
-# add the rest of the tokens needed based on the grammar
-# specified in the Scanner class "TinyScanner.rb"
+	# Identifiers and Numbers
+	IDENTIFIER = "id"       # Variable names 
+	NUMBER = "int"          # Integer values 
+
+	# Operators
+	ASSIGN_OP = "="         # Assignment operator
+	ADDOP = "+"            # Addition operator
+	SUBOP = "-"            # Subtraction operator
+	MULOP = "*"            # Multiplication operator
+	DIVOP = "/"            # Division operator
+
+	# Parentheses
+	LPAREN = "("            # Left parenthesis
+	RPAREN = ")"            # Right parenthesis
+
+	# Keywords
+	PRINT = "print"         # Print statement keyword
 
 #constructor
 	def initialize(type,text)
