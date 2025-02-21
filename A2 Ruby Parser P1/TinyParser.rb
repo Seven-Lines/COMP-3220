@@ -24,6 +24,9 @@ class Parser < Lexer
     when Token::THENOP then "THENOP"
     when Token::WHILEOP then "WHILEOP"
     when Token::ENDOP  then "ENDOP"
+    when Token::LT     then "LT"
+    when Token::GT     then "GT"
+    when Token::ANDOP  then "ANDOP"
     else
       tt
     end
@@ -47,12 +50,18 @@ class Parser < Lexer
   end
 
   def program
+    puts "Entering STMTSEQ Rule"
+    stmtseq
+    puts "Exiting STMTSEQ Rule"
+    puts "There were #{@parse_errors} parse errors found."
+  end
+
+  def stmtseq
     while @lookahead.type != Token::EOF
       puts "Entering STMT Rule"
       statement
       puts "Exiting STMT Rule"
     end
-    puts "There were #{@parse_errors} parse errors found."
   end
 
   def statement
@@ -61,11 +70,65 @@ class Parser < Lexer
       puts "Entering EXP Rule"
       exp
       puts "Exiting EXP Rule"
+    elsif @lookahead.type == Token::IFOP
+      ifstmt
+    elsif @lookahead.type == Token::WHILEOP
+      loopstmt
     else
       puts "Entering ASSGN Rule"
       assign
       puts "Exiting ASSGN Rule"
     end
+  end
+
+  def ifstmt
+    puts "Entering IFSTMT Rule"
+    match(Token::IFOP)
+    comparison
+    match(Token::THENOP)
+    puts "Entering STMTSEQ Rule"
+    stmtseq_for_ifwhile
+    puts "Exiting STMTSEQ Rule"
+    match(Token::ENDOP)
+    puts "Exiting IFSTMT Rule"
+  end
+
+  def loopstmt
+    puts "Entering LOOPSTMT Rule"
+    match(Token::WHILEOP)
+    comparison
+    match(Token::THENOP)
+    puts "Entering STMTSEQ Rule"
+    stmtseq_for_ifwhile
+    puts "Exiting STMTSEQ Rule"
+    match(Token::ENDOP)
+    puts "Exiting LOOPSTMT Rule"
+  end
+
+  def stmtseq_for_ifwhile
+    while @lookahead.type != Token::ENDOP && @lookahead.type != Token::EOF
+      puts "Entering STMT Rule"
+      statement
+      puts "Exiting STMT Rule"
+    end
+  end
+
+  def comparison
+    puts "Entering COMPARISON Rule"
+    factor
+    if @lookahead.type == Token::LT
+      match(Token::LT)
+    elsif @lookahead.type == Token::GT
+      match(Token::GT)
+    elsif @lookahead.type == Token::ANDOP
+      match(Token::ANDOP)
+    else
+      puts "Expected < or > or & found #{@lookahead.text}"
+      @parse_errors += 1
+      consume
+    end
+    factor
+    puts "Exiting COMPARISON Rule"
   end
 
   def assign
@@ -77,6 +140,7 @@ class Parser < Lexer
       @parse_errors += 1
       consume
     end
+
     if @lookahead.type == Token::ASSGN
       puts "Found ASSGN Token: #{@lookahead.text}"
       consume
@@ -85,6 +149,7 @@ class Parser < Lexer
       @parse_errors += 1
       consume
     end
+
     puts "Entering EXP Rule"
     exp
     puts "Exiting EXP Rule"
